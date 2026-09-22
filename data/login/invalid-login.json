@@ -1,0 +1,54 @@
+[
+  {
+    "id": "TC003",
+    "description": "Verify login fails with invalid password",
+    "tags": ["@regression", "@e2e", "@desktop"],
+    "input": {
+      "username": "Admin",
+      "password": "wrongpassword123"
+    },
+    "expected": {
+      "success": false,
+      "errorMessage": "Invalid credentials"
+    }
+  },
+  {
+    "id": "TC004",
+    "description": "Verify login fails with invalid username",
+    "tags": ["@regression", "@e2e", "@desktop"],
+    "input": {
+      "username": "InvalidUser",
+      "password": "admin123"
+    },
+    "expected": {
+      "success": false,
+      "errorMessage": "Invalid credentials"
+    }
+  },
+  {
+    "id": "TC005",
+    "description": "Verify login fails with empty username",
+    "tags": ["@regression", "@e2e"],
+    "input": {
+      "username": "",
+      "password": "admin123"
+    },
+    "expected": {
+      "success": false,
+      "errorMessage": "Required"
+    }
+  },
+  {
+    "id": "TC006",
+    "description": "Verify login fails with empty password",
+    "tags": ["@regression", "@e2e"],
+    "input": {
+      "username": "Admin",
+      "password": ""
+    },
+    "expected": {
+      "success": false,
+      "errorMessage": "Required"
+    }
+  }
+]

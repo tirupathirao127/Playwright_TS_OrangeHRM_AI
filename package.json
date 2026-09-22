@@ -1,0 +1,50 @@
+{
+  "name": "orangehrm-automation-framework",
+  "version": "1.0.0",
+  "description": "Production-ready Playwright TypeScript automation framework for OrangeHRM",
+  "author": "QA Team",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:dev": "TEST_ENV=DEV playwright test",
+    "test:tst": "TEST_ENV=TST playwright test",
+    "test:uat": "TEST_ENV=UAT playwright test",
+    "test:prd": "TEST_ENV=PRD playwright test",
+    "test:sanity": "TEST_ENV=DEV playwright test --grep @sanity",
+    "test:smoke": "TEST_ENV=DEV playwright test --grep @smoke",
+    "test:regression": "TEST_ENV=DEV playwright test --grep @regression",
+    "test:e2e": "TEST_ENV=DEV playwright test tests/e2e",
+    "test:component": "TEST_ENV=DEV playwright test tests/components",
+    "test:windows-chrome": "TEST_ENV=DEV playwright test --project=windows-chrome",
+    "test:mac-safari": "TEST_ENV=DEV playwright test --project=mac-safari",
+    "test:android": "TEST_ENV=DEV playwright test --project=android-chrome",
+    "test:iphone": "TEST_ENV=DEV playwright test --project=iphone-safari",
+    "test:debug": "TEST_ENV=DEV playwright test --debug",
+    "test:headed": "TEST_ENV=DEV playwright test --headed",
+    "report": "playwright show-report",
+    "lint": "eslint . --ext .ts,.js",
+    "lint:fix": "eslint . --ext .ts,.js --fix",
+    "format": "prettier --write \"**/*.{ts,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,js,json,md}\"",
+    "type-check": "tsc --noEmit",
+    "prebuild": "npm run type-check && npm run lint",
+    "build": "echo 'Framework ready for testing'",
+    "install-browsers": "playwright install"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^22.0.0",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.0",
+    "prettier": "^3.3.0",
+    "typescript": "^5.5.0",
+    "typescript-eslint": "^7.0.0"
+  },
+  "dependencies": {
+    "csv-parse": "^5.5.5"
+  }
+}

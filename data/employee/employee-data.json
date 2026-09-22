@@ -1,0 +1,55 @@
+[
+  {
+    "id": "EMP001",
+    "description": "Search for existing employee - Admin user",
+    "tags": ["@sanity", "@e2e", "@desktop"],
+    "input": {
+      "firstName": "Admin",
+      "lastName": ""
+    },
+    "expected": {
+      "success": true,
+      "messageContains": "Admin"
+    }
+  },
+  {
+    "id": "EMP002",
+    "description": "Create new employee with required fields",
+    "tags": ["@smoke", "@e2e", "@desktop"],
+    "input": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "employeeId": "EMP-2024-001"
+    },
+    "expected": {
+      "success": true,
+      "messageContains": "successfully"
+    }
+  },
+  {
+    "id": "EMP003",
+    "description": "Search with partial employee name",
+    "tags": ["@regression", "@e2e"],
+    "input": {
+      "firstName": "Ad",
+      "lastName": ""
+    },
+    "expected": {
+      "success": true,
+      "messageContains": "Admin"
+    }
+  },
+  {
+    "id": "EMP004",
+    "description": "Search with no matching employee",
+    "tags": ["@regression", "@e2e"],
+    "input": {
+      "firstName": "NonExistent",
+      "lastName": "Employee"
+    },
+    "expected": {
+      "success": true,
+      "messageContains": "No Records Found"
+    }
+  }
+]

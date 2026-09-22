@@ -1,0 +1,28 @@
+[
+  {
+    "id": "TC001",
+    "description": "Verify admin can log in with valid credentials",
+    "tags": ["@sanity", "@e2e", "@desktop"],
+    "input": {
+      "username": "Admin",
+      "password": "admin123"
+    },
+    "expected": {
+      "success": true,
+      "redirectTo": "/dashboard"
+    }
+  },
+  {
+    "id": "TC002",
+    "description": "Verify login redirects to dashboard",
+    "tags": ["@smoke", "@e2e", "@desktop"],
+    "input": {
+      "username": "Admin",
+      "password": "admin123"
+    },
+    "expected": {
+      "success": true,
+      "titleContains": "OrangeHRM"
+    }
+  }
+]

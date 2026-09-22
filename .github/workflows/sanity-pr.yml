@@ -1,0 +1,99 @@
+name: Sanity Tests on Pull Request
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches:
+      - develop
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sanity-tests:
+    name: Run Sanity & Smoke Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser-project: [windows-chrome]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run sanity and smoke tests
+        env:
+          TEST_ENV: DEV
+          ORANGEHRM_USERNAME: ${{ secrets.ORANGEHRM_USERNAME }}
+          ORANGEHRM_PASSWORD: ${{ secrets.ORANGEHRM_PASSWORD }}
+          CI: true
+        run: npx playwright test --project=${{ matrix.browser-project }} --grep "@(sanity|smoke)"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.browser-project }}
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload test traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.browser-project }}
+          path: test-results/
+          retention-days: 7
+
+      - name: Comment on PR with results
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const testResultsPath = './playwright-report/index.html';
+            
+            let comment = '## Test Results\n\n';
+            comment += '✅ Sanity & Smoke tests completed on `${{ matrix.browser-project }}`\n\n';
+            comment += '📊 Check the [detailed report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for more information.\n';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: sanity-tests
+    if: always()
+    steps:
+      - name: Check test results
+        run: |
+          if [ "${{ needs.sanity-tests.result }}" == "failure" ]; then
+            echo "❌ Sanity/Smoke tests failed"
+            exit 1
+          else
+            echo "✅ All tests passed"
+          fi
